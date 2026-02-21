@@ -1,23 +1,19 @@
-import axios from "axios"
-import { IBreed } from "../interfaces/cat.interface"
 
-const API_URL = 'https://api.thecatapi.com/v1'
-const apiHeaders = {
-    'x-api-key': process.env.CAT_API_KEY || ''
-}
+import { IBreed } from "../interfaces/cat.interface"
+import { httpClient } from "../config/http.client"
 
 export const getAllBreeds = async (): Promise<IBreed[]> => {
-    const response = await axios.get<IBreed[]>(`${API_URL}/breeds`, { headers: apiHeaders })
+    const response = await httpClient.get<IBreed[]>(`/breeds`)
     return response.data
 }
 
 export const getBreedById = async (id: string): Promise<IBreed> => {
-    const response = await axios.get<IBreed>(`${API_URL}/breeds/${id}`, { headers: apiHeaders })
+    const response = await httpClient.get<IBreed>(`/breeds/${id}`)
     return response.data
 }
 
 export const searchBreeds = async (query: string): Promise<IBreed[]> => {
-    const response = await axios.get<IBreed[]>(`${API_URL}/breeds/search?q=${query}`, { headers: apiHeaders })
+    const response = await httpClient.get<IBreed[]>(`/breeds/search?q=${query}`)
     return response.data
 
 }
