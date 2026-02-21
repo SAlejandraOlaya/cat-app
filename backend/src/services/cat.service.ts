@@ -6,17 +6,17 @@ const apiHeaders = {
     'x-api-key': process.env.CAT_API_KEY || ''
 }
 
-export const getAllBreeds = async () => {
+export const getAllBreeds = async (): Promise<IBreed[]> => {
     const response = await axios.get<IBreed[]>(`${API_URL}/breeds`, { headers: apiHeaders })
     return response.data
 }
 
-export const getBreedById = async (id: string) => {
+export const getBreedById = async (id: string): Promise<IBreed> => {
     const response = await axios.get<IBreed>(`${API_URL}/breeds/${id}`, { headers: apiHeaders })
     return response.data
 }
 
-export const searchBreeds = async (query: string) => {
+export const searchBreeds = async (query: string): Promise<IBreed[]> => {
     const response = await axios.get<IBreed[]>(`${API_URL}/breeds/search?q=${query}`, { headers: apiHeaders })
     return response.data
 
