@@ -12,7 +12,7 @@ export const getBreedsController = async (req: Request, res: Response) => {
 
 export const getBreedByIdController = async (req: Request, res: Response) => {
     try {
-        const { breed_id } = req.params
+        const { breed_id } = req.params as { breed_id: string }
         if (!breed_id) {
             return res.status(400).json({ message: 'Breed ID is required' })
         }
@@ -25,7 +25,7 @@ export const getBreedByIdController = async (req: Request, res: Response) => {
 
 export const searchBreedsController = async (req: Request, res: Response) => {
     try {
-        const { q } = req.query
+        const { q } = req.query as { q: string }
         if (!q) {
             return res.status(400).json({ message: 'Query parameter q is required' })
         }
