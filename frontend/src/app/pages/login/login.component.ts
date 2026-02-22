@@ -21,6 +21,7 @@ export class LoginComponent {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state?.['registered']) {
       this.successMessage = 'Account created successfully!';
+      setTimeout(() => this.successMessage = '', 3000);
     }
   }
 
