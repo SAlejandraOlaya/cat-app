@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IBreed } from '../interfaces/cat.interface';
+import { environment } from '../../environments/environment';
 
 
 @Injectable({
@@ -9,7 +10,7 @@ import { IBreed } from '../interfaces/cat.interface';
 export class CatService {
 
 constructor(private http: HttpClient) { }
-private apiUrl = 'http://localhost:3000/api';
+private apiUrl = environment.apiUrl;
 
 getBreeds() {
     return this.http.get<IBreed[]>(`${this.apiUrl}/breeds`);
