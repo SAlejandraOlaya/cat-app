@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CatService } from '../../services/cat.service';
 import { ImageService } from '../../services/image.service';
+import { AuthService } from '../../services/auth.service';
 import { IBreed } from '../../interfaces/cat.interface';
 import { IImage } from '../../interfaces/image.interface';
 
@@ -20,11 +21,16 @@ export class HomeComponent implements OnInit {
   images: IImage[] = [];
   currentImageIndex = 0;
   loading = false;
+  userName = '';
 
   constructor(
     private catService: CatService,
-    private imageService: ImageService
-  ) {}
+    private imageService: ImageService,
+    private authService: AuthService
+  ) {
+    const user = this.authService.getUser();
+    this.userName = user?.name || '';
+  }
 
   ngOnInit() {
     this.catService.getBreeds().subscribe({
