@@ -1,1 +1,58 @@
-<p>breeds works!</p>
+<div class="min-h-screen bg-gray-100 p-6">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Breeds Table</h1>
+      <a routerLink="/home" class="text-blue-600 hover:underline text-sm">Back to Home</a>
+    </div>
+
+    <div class="flex gap-3 mb-6">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search breeds..."
+        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        (click)="onSearch()"
+        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
+        Search
+      </button>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-10 text-gray-500">Loading...</div>
+
+    <div *ngIf="!loading && breeds.length === 0" class="text-center py-10 text-gray-500">
+      No breeds found.
+    </div>
+
+    <div *ngIf="!loading && breeds.length > 0" class="overflow-x-auto bg-white rounded-lg shadow-md">
+      <table class="w-full text-sm text-left">
+        <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">Name</th>
+            <th class="px-4 py-3">Origin</th>
+            <th class="px-4 py-3">Temperament</th>
+            <th class="px-4 py-3">Life Span</th>
+            <th class="px-4 py-3">Weight</th>
+            <th class="px-4 py-3">Intelligence</th>
+            <th class="px-4 py-3">Adaptability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let breed of breeds" class="border-t border-gray-200 hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium text-gray-800">{{ breed.name }}</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.origin }}</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.temperament }}</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.life_span }} yrs</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.weight.metric }} kg</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.intelligence }} / 5</td>
+            <td class="px-4 py-3 text-gray-600">{{ breed.adaptability }} / 5</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
