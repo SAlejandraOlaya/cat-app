@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   currentImageIndex = 0;
   loading = false;
   userName = '';
+  isLoggedIn = false;
 
   constructor(
     private catService: CatService,
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
   ) {
     const user = this.authService.getUser();
     this.userName = user?.name || '';
+    this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   ngOnInit() {
