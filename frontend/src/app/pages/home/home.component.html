@@ -1,1 +1,100 @@
-<p>home works!</p>
+<div class="min-h-screen bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-3xl font-bold text-gray-800">Cat Breeds Explorer</h1>
+      <a routerLink="/breeds" class="text-blue-600 hover:underline text-sm">View breeds table</a>
+    </div>
+
+    <div class="mb-6">
+      <label class="block text-gray-700 font-medium mb-2">Select a breed</label>
+      <select
+        (change)="onBreedChange($any($event.target).value)"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">-- Select a breed --</option>
+        <option *ngFor="let breed of breeds" [value]="breed.id">{{ breed.name }}</option>
+      </select>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-10 text-gray-500">Loading...</div>
+
+    <div *ngIf="selectedBreed && !loading">
+
+      <div *ngIf="images.length > 0" class="relative mb-6 bg-white rounded-lg shadow-md overflow-hidden">
+        <img
+          [src]="images[currentImageIndex].url"
+          [alt]="selectedBreed.name"
+          class="w-full h-96 object-cover"
+        />
+
+        <button
+          (click)="prevImage()"
+          class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-black/70 transition"
+        >
+          &#8249;
+        </button>
+
+        <button
+          (click)="nextImage()"
+          class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-black/70 transition"
+        >
+          &#8250;
+        </button>
+
+        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+          <span
+            *ngFor="let img of images; let i = index"
+            class="w-2.5 h-2.5 rounded-full"
+            [ngClass]="i === currentImageIndex ? 'bg-white' : 'bg-white/50'"
+          ></span>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ selectedBreed.name }}</h2>
+        <p class="text-gray-600 mb-4">{{ selectedBreed.description }}</p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Origin</span>
+            <p class="text-gray-600">{{ selectedBreed.origin }}</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Temperament</span>
+            <p class="text-gray-600">{{ selectedBreed.temperament }}</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Life Span</span>
+            <p class="text-gray-600">{{ selectedBreed.life_span }} years</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Weight</span>
+            <p class="text-gray-600">{{ selectedBreed.weight.metric }} kg</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Adaptability</span>
+            <p class="text-gray-600">{{ selectedBreed.adaptability }} / 5</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Intelligence</span>
+            <p class="text-gray-600">{{ selectedBreed.intelligence }} / 5</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Energy Level</span>
+            <p class="text-gray-600">{{ selectedBreed.energy_level }} / 5</p>
+          </div>
+          <div class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Child Friendly</span>
+            <p class="text-gray-600">{{ selectedBreed.child_friendly }} / 5</p>
+          </div>
+          <div *ngIf="selectedBreed.wikipedia_url" class="bg-gray-50 p-3 rounded">
+            <span class="font-semibold text-gray-700">Wikipedia</span>
+            <p><a [href]="selectedBreed.wikipedia_url" target="_blank" class="text-blue-600 hover:underline">Read more</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
