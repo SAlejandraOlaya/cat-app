@@ -69,6 +69,20 @@ describe("AuthService", () => {
     req.flush(mockUser);
   });
 
+  it("should send GET request on getProfile and cache user", () => {
+    const mockUser = { id: "u1", name: "Ale", email: "ale@test.com" };
+
+    service.getProfile().subscribe((user) => {
+      expect(user).toEqual(mockUser);
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}/profile`);
+    expect(req.request.method).toBe("GET");
+    req.flush(mockUser);
+
+    expect(localStorage.getItem("user")).toBe(JSON.stringify(mockUser));
+  });
+
   it("should return token from localStorage", () => {
     localStorage.setItem("token", "test-token");
     expect(service.getToken()).toBe("test-token");

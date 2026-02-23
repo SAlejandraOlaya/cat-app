@@ -10,6 +10,7 @@
       <input
         type="text"
         [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearch()"
         placeholder="Search breeds..."
         class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 transition"
       />
