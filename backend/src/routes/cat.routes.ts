@@ -1,12 +1,16 @@
+import { Router } from "express";
+import {
+  getBreedsController,
+  getBreedByIdController,
+  searchBreedsController,
+} from "../controllers/cat.controller";
+import { validate } from "../middlewares/validate.middleware";
+import { breedIdParamSchema, searchQuerySchema } from "../dtos/cat.dto";
 
-import { Router } from "express"
-import { getBreedsController, getBreedByIdController, searchBreedsController } from "../controllers/cat.controller"
+const router = Router();
 
-const router = Router()
+router.get("/breeds", getBreedsController);
+router.get("/breeds/search", validate(searchQuerySchema, "query"), searchBreedsController);
+router.get("/breeds/:breed_id", validate(breedIdParamSchema, "params"), getBreedByIdController);
 
-router.get('/breeds', getBreedsController)
-router.get('/breeds/search', searchBreedsController)
-router.get('/breeds/:breed_id', getBreedByIdController)
-
-
-export default router
+export default router;

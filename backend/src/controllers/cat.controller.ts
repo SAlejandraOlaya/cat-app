@@ -4,7 +4,6 @@ import {
   getBreedById,
   searchBreeds,
 } from "../services/cat.service";
-import { ValidationError } from "../errors/validation.error";
 
 export const getBreedsController = async (_req: Request, res: Response) => {
   const breeds = await getAllBreeds();
@@ -19,7 +18,6 @@ export const getBreedByIdController = async (req: Request, res: Response) => {
 
 export const searchBreedsController = async (req: Request, res: Response) => {
   const { q } = req.query as { q: string };
-  if (!q) throw new ValidationError("Query parameter q is required");
   const breeds = await searchBreeds(q);
   res.status(200).json(breeds);
 };
