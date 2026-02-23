@@ -3,6 +3,7 @@ import { ProfileComponent } from "./profile.component";
 import { AuthService } from "../../core/services/auth.service";
 import { Router } from "@angular/router";
 import { provideRouter } from "@angular/router";
+import { of } from "rxjs";
 
 describe("ProfileComponent", () => {
   let component: ProfileComponent;
@@ -10,16 +11,17 @@ describe("ProfileComponent", () => {
   let mockAuthService: jasmine.SpyObj<AuthService>;
   let router: Router;
 
+  const mockUser = { name: "Ale", email: "ale@test.com" } as any;
+
   beforeEach(async () => {
     mockAuthService = jasmine.createSpyObj("AuthService", [
+      "getProfile",
       "getUser",
       "isLoggedIn",
       "logout",
     ]);
-    mockAuthService.getUser.and.returnValue({
-      name: "Ale",
-      email: "ale@test.com",
-    } as any);
+    mockAuthService.getProfile.and.returnValue(of(mockUser));
+    mockAuthService.getUser.and.returnValue(mockUser);
     mockAuthService.isLoggedIn.and.returnValue(true);
 
     await TestBed.configureTestingModule({
@@ -42,11 +44,10 @@ describe("ProfileComponent", () => {
     expect(component).toBeTruthy();
   });
 
-  it("should load user on init", () => {
-    expect(component.user).toEqual({
-      name: "Ale",
-      email: "ale@test.com",
-    } as any);
+  it("should load user from API on init", () => {
+    expect(mockAuthService.getProfile).toHaveBeenCalled();
+    expect(component.user()).toEqual(mockUser);
+    expect(component.loading()).toBeFalse();
   });
 
   it("should call logout and navigate to login", () => {
