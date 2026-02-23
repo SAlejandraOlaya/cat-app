@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { IUser } from '../../interfaces/user.interface';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router, RouterModule } from "@angular/router";
+import { AuthService } from "../../core/services/auth.service";
+import { IUser } from "../../shared/interfaces/user.interface";
 
 @Component({
-  selector: 'app-profile',
+  selector: "app-profile",
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  templateUrl: "./profile.component.html",
+  styleUrl: "./profile.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProfileComponent implements OnInit {
-  user: IUser | null = null;
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  user: IUser | null = null;
 
   ngOnInit() {
     this.user = this.authService.getUser();
@@ -22,6 +29,6 @@ export class ProfileComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(["/login"]);
   }
 }

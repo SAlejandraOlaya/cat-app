@@ -1,12 +1,12 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HomeComponent } from './home.component';
-import { CatService } from '../../services/cat.service';
-import { ImageService } from '../../services/image.service';
-import { AuthService } from '../../services/auth.service';
-import { provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { HomeComponent } from "./home.component";
+import { CatService } from "../../shared/services/cat.service";
+import { ImageService } from "../../shared/services/image.service";
+import { AuthService } from "../../core/services/auth.service";
+import { provideRouter } from "@angular/router";
+import { of } from "rxjs";
 
-describe('HomeComponent', () => {
+describe("HomeComponent", () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
   let mockCatService: jasmine.SpyObj<CatService>;
@@ -14,9 +14,14 @@ describe('HomeComponent', () => {
   let mockAuthService: jasmine.SpyObj<AuthService>;
 
   beforeEach(async () => {
-    mockCatService = jasmine.createSpyObj('CatService', ['getBreeds']);
-    mockImageService = jasmine.createSpyObj('ImageService', ['getImagesByBreedId']);
-    mockAuthService = jasmine.createSpyObj('AuthService', ['getUser', 'isLoggedIn']);
+    mockCatService = jasmine.createSpyObj("CatService", ["getBreeds"]);
+    mockImageService = jasmine.createSpyObj("ImageService", [
+      "getImagesByBreedId",
+    ]);
+    mockAuthService = jasmine.createSpyObj("AuthService", [
+      "getUser",
+      "isLoggedIn",
+    ]);
 
     mockCatService.getBreeds.and.returnValue(of([]));
     mockAuthService.getUser.and.returnValue(null);
@@ -28,8 +33,8 @@ describe('HomeComponent', () => {
         provideRouter([]),
         { provide: CatService, useValue: mockCatService },
         { provide: ImageService, useValue: mockImageService },
-        { provide: AuthService, useValue: mockAuthService }
-      ]
+        { provide: AuthService, useValue: mockAuthService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HomeComponent);
@@ -37,34 +42,38 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 
-  it('should load breeds on init', () => {
+  it("should load breeds on init", () => {
     expect(mockCatService.getBreeds).toHaveBeenCalled();
   });
 
-  it('should load images when breed is selected', () => {
-    const mockBreeds = [{ id: 'abys', name: 'Abyssinian' }] as any[];
-    const mockImages = [{ id: '1', url: 'https://example.com/cat.jpg', width: 600, height: 400 }];
+  it("should load images when breed is selected", () => {
+    const mockBreeds = [{ id: "abys", name: "Abyssinian" }] as any[];
+    const mockImages = [
+      { id: "1", url: "https://example.com/cat.jpg", width: 600, height: 400 },
+    ];
 
-    component.breeds = mockBreeds;
+    component.breeds.set(mockBreeds);
     mockImageService.getImagesByBreedId.and.returnValue(of(mockImages));
 
-    component.onBreedChange('abys');
+    component.onBreedChange("abys");
 
-    expect(mockImageService.getImagesByBreedId).toHaveBeenCalledWith('abys');
-    expect(component.images).toEqual(mockImages);
+    expect(mockImageService.getImagesByBreedId).toHaveBeenCalledWith("abys");
+    expect(component.images()).toEqual(mockImages);
   });
 
-  it('should clear selection when empty breed is selected', () => {
-    component.selectedBreed = { id: 'abys', name: 'Abyssinian' } as any;
-    component.images = [{ id: '1', url: 'test', width: 100, height: 100 }];
+  it("should clear selection when empty breed is selected", () => {
+    component.selectedBreed.set({ id: "abys", name: "Abyssinian" } as any);
+    component.images.set([
+      { id: "1", url: "test", width: 100, height: 100 },
+    ]);
 
-    component.onBreedChange('');
+    component.onBreedChange("");
 
-    expect(component.selectedBreed).toBeNull();
-    expect(component.images.length).toBe(0);
+    expect(component.selectedBreed()).toBeNull();
+    expect(component.images().length).toBe(0);
   });
 });

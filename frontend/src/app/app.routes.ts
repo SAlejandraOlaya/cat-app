@@ -1,16 +1,42 @@
-import { Routes } from '@angular/router';
-import { LoginComponent } from './pages/login/login.component';
-import { RegisterComponent } from './pages/register/register.component';
-import { HomeComponent } from './pages/home/home.component';
-import { BreedsComponent } from './pages/breeds/breeds.component';
-import { ProfileComponent } from './pages/profile/profile.component';
-import { authGuard } from './guards/auth.guard';
+import { Routes } from "@angular/router";
+import { authGuard } from "./core/guards/auth.guard";
 
 export const routes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent },
-    { path: 'home', component: HomeComponent },
-    { path: 'breeds', component: BreedsComponent },
-    { path: 'profile', component: ProfileComponent, canActivate: [authGuard] },
-    { path: '', redirectTo: 'home', pathMatch: 'full' },
+  {
+    path: "login",
+    loadComponent: () =>
+      import("./features/login/login.component").then(
+        (m) => m.LoginComponent
+      ),
+  },
+  {
+    path: "register",
+    loadComponent: () =>
+      import("./features/register/register.component").then(
+        (m) => m.RegisterComponent
+      ),
+  },
+  {
+    path: "home",
+    loadComponent: () =>
+      import("./features/home/home.component").then(
+        (m) => m.HomeComponent
+      ),
+  },
+  {
+    path: "breeds",
+    loadComponent: () =>
+      import("./features/breeds/breeds.component").then(
+        (m) => m.BreedsComponent
+      ),
+  },
+  {
+    path: "profile",
+    loadComponent: () =>
+      import("./features/profile/profile.component").then(
+        (m) => m.ProfileComponent
+      ),
+    canActivate: [authGuard],
+  },
+  { path: "", redirectTo: "home", pathMatch: "full" },
 ];

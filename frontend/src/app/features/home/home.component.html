@@ -1,39 +1,16 @@
 <div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
 
-  <nav class="bg-white shadow-sm border-b border-gray-200">
-    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl">🐱</span>
-        <h1 class="text-xl font-bold text-gray-800">CatApp</h1>
-      </div>
-      <div class="flex items-center gap-4">
-        <a routerLink="/breeds" class="text-gray-600 hover:text-blue-600 transition text-sm font-medium">Breeds Table</a>
-
-        <ng-container *ngIf="isLoggedIn; else notLoggedIn">
-          <a routerLink="/profile" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-blue-700 hover:to-purple-700 transition text-sm shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-            </svg>
-            Profile
-          </a>
-        </ng-container>
-
-        <ng-template #notLoggedIn>
-          <a routerLink="/login" class="text-gray-600 hover:text-blue-600 transition text-sm font-medium">Login</a>
-          <a routerLink="/register" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-blue-700 hover:to-purple-700 transition text-sm shadow-md">
-            Register
-          </a>
-        </ng-template>
-      </div>
-    </div>
-  </nav>
+  <app-navbar [isLoggedIn]="isLoggedIn()" [userName]="userName()" />
 
   <div class="max-w-5xl mx-auto px-6 py-8">
 
     <div class="text-center mb-8">
       <h2 class="text-4xl font-extrabold text-gray-800 mb-2">Explore Cat Breeds</h2>
-      <p *ngIf="userName" class="text-lg text-gray-500">Welcome back, <span class="font-semibold text-blue-600">{{ userName }}</span> 👋</p>
-      <p *ngIf="!userName" class="text-lg text-gray-500">Discover breeds, view images, and learn about your favorite cats</p>
+      @if (userName()) {
+        <p class="text-lg text-gray-500">Welcome back, <span class="font-semibold text-blue-600">{{ userName() }}</span> 👋</p>
+      } @else {
+        <p class="text-lg text-gray-500">Discover breeds, view images, and learn about your favorite cats</p>
+      }
     </div>
 
     <div class="max-w-lg mx-auto mb-10">
@@ -42,129 +19,109 @@
         class="w-full px-5 py-3 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 text-lg shadow-sm transition"
       >
         <option value="">🔍 Select a breed...</option>
-        <option *ngFor="let breed of breeds" [value]="breed.id">{{ breed.name }}</option>
+        @for (breed of breeds(); track breed.id) {
+          <option [value]="breed.id">{{ breed.name }}</option>
+        }
       </select>
     </div>
 
-    <div *ngIf="loading" class="text-center py-16">
-      <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-      <p class="text-gray-500 mt-4">Loading...</p>
-    </div>
-
-    <div *ngIf="!selectedBreed && !loading" class="text-center py-16">
-      <span class="text-6xl mb-4 block">😺</span>
-      <p class="text-gray-400 text-lg">Select a breed to get started</p>
-    </div>
-
-    <div *ngIf="selectedBreed && !loading" class="space-y-6">
-
-      <div *ngIf="images.length > 0" class="relative rounded-2xl overflow-hidden shadow-xl bg-gray-900">
-        <img
-          [src]="images[currentImageIndex].url"
-          [alt]="selectedBreed.name"
-          class="w-full h-[28rem] object-contain"
-        />
-
-        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
-
-        <div class="absolute bottom-6 left-6">
-          <h3 class="text-white text-3xl font-bold drop-shadow-lg">{{ selectedBreed.name }}</h3>
-          <p class="text-white/80 text-sm">{{ selectedBreed.origin }}</p>
-        </div>
-
-        <button
-          (click)="prevImage()"
-          class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 text-gray-800 w-10 h-10 rounded-full hover:bg-white transition shadow-lg flex items-center justify-center"
-        >
-          &#8249;
-        </button>
-
-        <button
-          (click)="nextImage()"
-          class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 text-gray-800 w-10 h-10 rounded-full hover:bg-white transition shadow-lg flex items-center justify-center"
-        >
-          &#8250;
-        </button>
-
-        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-          <span
-            *ngFor="let img of images; let i = index"
-            (click)="currentImageIndex = i"
-            class="w-2.5 h-2.5 rounded-full cursor-pointer transition"
-            [ngClass]="i === currentImageIndex ? 'bg-white scale-125' : 'bg-white/50'"
-          ></span>
-        </div>
+    @if (loading()) {
+      <div class="text-center py-16">
+        <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-gray-500 mt-4">Loading...</p>
       </div>
+    }
 
-      <div class="bg-white rounded-2xl shadow-lg p-8">
-        <h3 class="text-xl font-bold text-gray-800 mb-1">About this breed</h3>
-        <p class="text-gray-600 leading-relaxed mb-6">{{ selectedBreed.description }}</p>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl text-center">
-            <span class="text-2xl block mb-1">🌍</span>
-            <span class="text-xs font-semibold text-blue-600 uppercase">Origin</span>
-            <p class="text-gray-800 font-medium mt-1">{{ selectedBreed.origin }}</p>
-          </div>
-          <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl text-center">
-            <span class="text-2xl block mb-1">❤️</span>
-            <span class="text-xs font-semibold text-purple-600 uppercase">Life Span</span>
-            <p class="text-gray-800 font-medium mt-1">{{ selectedBreed.life_span }} yrs</p>
-          </div>
-          <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl text-center">
-            <span class="text-2xl block mb-1">⚖️</span>
-            <span class="text-xs font-semibold text-green-600 uppercase">Weight</span>
-            <p class="text-gray-800 font-medium mt-1">{{ selectedBreed.weight.metric }} kg</p>
-          </div>
-          <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl text-center">
-            <span class="text-2xl block mb-1">🧠</span>
-            <span class="text-xs font-semibold text-orange-600 uppercase">Intelligence</span>
-            <p class="text-gray-800 font-medium mt-1">{{ selectedBreed.intelligence }} / 5</p>
-          </div>
-        </div>
-
-        <div class="mt-6 bg-gray-50 rounded-xl p-5">
-          <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Temperament</h4>
-          <div class="flex flex-wrap gap-2">
-            <span
-              *ngFor="let trait of selectedBreed.temperament.split(', ')"
-              class="bg-white border border-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm shadow-sm"
-            >
-              {{ trait }}
-            </span>
-          </div>
-        </div>
-
-        <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
-          <div class="text-center p-3">
-            <p class="text-2xl font-bold text-blue-600">{{ selectedBreed.adaptability }}</p>
-            <span class="text-xs text-gray-500">Adaptability</span>
-          </div>
-          <div class="text-center p-3">
-            <p class="text-2xl font-bold text-purple-600">{{ selectedBreed.affection_level }}</p>
-            <span class="text-xs text-gray-500">Affection</span>
-          </div>
-          <div class="text-center p-3">
-            <p class="text-2xl font-bold text-green-600">{{ selectedBreed.energy_level }}</p>
-            <span class="text-xs text-gray-500">Energy</span>
-          </div>
-          <div class="text-center p-3">
-            <p class="text-2xl font-bold text-orange-600">{{ selectedBreed.child_friendly }}</p>
-            <span class="text-xs text-gray-500">Child Friendly</span>
-          </div>
-        </div>
-
-        <div *ngIf="selectedBreed.wikipedia_url" class="mt-6 text-center">
-          <a [href]="selectedBreed.wikipedia_url" target="_blank"
-            class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition">
-            Learn more on Wikipedia
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-            </svg>
-          </a>
-        </div>
+    @if (!selectedBreed() && !loading()) {
+      <div class="text-center py-16">
+        <span class="text-6xl mb-4 block">😺</span>
+        <p class="text-gray-400 text-lg">Select a breed to get started</p>
       </div>
-    </div>
+    }
+
+    @if (selectedBreed(); as breed) {
+      @if (!loading()) {
+        <div class="space-y-6">
+
+          <app-carousel [images]="images()" [altText]="breed.name">
+            <div class="absolute bottom-6 left-6 z-10">
+              <h3 class="text-white text-3xl font-bold drop-shadow-lg">{{ breed.name }}</h3>
+              <p class="text-white/80 text-sm">{{ breed.origin }}</p>
+            </div>
+          </app-carousel>
+
+          <div class="bg-white rounded-2xl shadow-lg p-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-1">About this breed</h3>
+            <p class="text-gray-600 leading-relaxed mb-6">{{ breed.description }}</p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl text-center">
+                <span class="text-2xl block mb-1">🌍</span>
+                <span class="text-xs font-semibold text-blue-600 uppercase">Origin</span>
+                <p class="text-gray-800 font-medium mt-1">{{ breed.origin }}</p>
+              </div>
+              <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl text-center">
+                <span class="text-2xl block mb-1">❤️</span>
+                <span class="text-xs font-semibold text-purple-600 uppercase">Life Span</span>
+                <p class="text-gray-800 font-medium mt-1">{{ breed.life_span }} yrs</p>
+              </div>
+              <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl text-center">
+                <span class="text-2xl block mb-1">⚖️</span>
+                <span class="text-xs font-semibold text-green-600 uppercase">Weight</span>
+                <p class="text-gray-800 font-medium mt-1">{{ breed.weight.metric }} kg</p>
+              </div>
+              <div class="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl text-center">
+                <span class="text-2xl block mb-1">🧠</span>
+                <span class="text-xs font-semibold text-orange-600 uppercase">Intelligence</span>
+                <p class="text-gray-800 font-medium mt-1">{{ breed.intelligence }} / 5</p>
+              </div>
+            </div>
+
+            <div class="mt-6 bg-gray-50 rounded-xl p-5">
+              <h4 class="text-sm font-semibold text-gray-500 uppercase mb-3">Temperament</h4>
+              <div class="flex flex-wrap gap-2">
+                @for (trait of breed.temperament.split(', '); track trait) {
+                  <span class="bg-white border border-gray-200 text-gray-700 px-3 py-1 rounded-full text-sm shadow-sm">
+                    {{ trait }}
+                  </span>
+                }
+              </div>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div class="text-center p-3">
+                <p class="text-2xl font-bold text-blue-600">{{ breed.adaptability }}</p>
+                <span class="text-xs text-gray-500">Adaptability</span>
+              </div>
+              <div class="text-center p-3">
+                <p class="text-2xl font-bold text-purple-600">{{ breed.affection_level }}</p>
+                <span class="text-xs text-gray-500">Affection</span>
+              </div>
+              <div class="text-center p-3">
+                <p class="text-2xl font-bold text-green-600">{{ breed.energy_level }}</p>
+                <span class="text-xs text-gray-500">Energy</span>
+              </div>
+              <div class="text-center p-3">
+                <p class="text-2xl font-bold text-orange-600">{{ breed.child_friendly }}</p>
+                <span class="text-xs text-gray-500">Child Friendly</span>
+              </div>
+            </div>
+
+            @if (breed.wikipedia_url) {
+              <div class="mt-6 text-center">
+                <a [href]="breed.wikipedia_url" target="_blank"
+                  class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition">
+                  Learn more on Wikipedia
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                  </svg>
+                </a>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
 
   </div>
 </div>

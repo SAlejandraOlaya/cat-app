@@ -1,78 +1,78 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { CatService } from '../../services/cat.service';
-import { ImageService } from '../../services/image.service';
-import { AuthService } from '../../services/auth.service';
-import { IBreed } from '../../interfaces/cat.interface';
-import { IImage } from '../../interfaces/image.interface';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  DestroyRef,
+} from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CatService } from "../../shared/services/cat.service";
+import { ImageService } from "../../shared/services/image.service";
+import { AuthService } from "../../core/services/auth.service";
+import { IBreed } from "../../shared/interfaces/cat.interface";
+import { IImage } from "../../shared/interfaces/image.interface";
+import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
+import { CarouselComponent } from "../../shared/components/carousel/carousel.component";
 
 @Component({
-  selector: 'app-home',
+  selector: "app-home",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  imports: [CommonModule, RouterModule, NavbarComponent, CarouselComponent],
+  templateUrl: "./home.component.html",
+  styleUrl: "./home.component.css",
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit {
-  breeds: IBreed[] = [];
-  selectedBreed: IBreed | null = null;
-  images: IImage[] = [];
-  currentImageIndex = 0;
-  loading = false;
-  userName = '';
-  isLoggedIn = false;
+  private catService = inject(CatService);
+  private imageService = inject(ImageService);
+  private authService = inject(AuthService);
+  private destroyRef = inject(DestroyRef);
 
-  constructor(
-    private catService: CatService,
-    private imageService: ImageService,
-    private authService: AuthService
-  ) {
-    const user = this.authService.getUser();
-    this.userName = user?.name || '';
-    this.isLoggedIn = this.authService.isLoggedIn();
-  }
+  breeds = signal<IBreed[]>([]);
+  selectedBreed = signal<IBreed | null>(null);
+  images = signal<IImage[]>([]);
+  loading = signal(false);
+  userName = signal("");
+  isLoggedIn = signal(false);
 
   ngOnInit() {
-    this.catService.getBreeds().subscribe({
-      next: (breeds) => this.breeds = breeds,
-      error: (err) => console.error('Error loading breeds:', err)
-    });
+    const user = this.authService.getUser();
+    this.userName.set(user?.name || "");
+    this.isLoggedIn.set(this.authService.isLoggedIn());
+
+    this.catService
+      .getBreeds()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (breeds) => this.breeds.set(breeds),
+        error: (err) => console.error("Error loading breeds:", err),
+      });
   }
 
   onBreedChange(breedId: string) {
     if (!breedId) {
-      this.selectedBreed = null;
-      this.images = [];
+      this.selectedBreed.set(null);
+      this.images.set([]);
       return;
     }
 
-    this.loading = true;
-    this.selectedBreed = this.breeds.find(b => b.id === breedId) || null;
-    this.currentImageIndex = 0;
+    this.loading.set(true);
+    this.selectedBreed.set(
+      this.breeds().find((b) => b.id === breedId) ?? null
+    );
 
-    this.imageService.getImagesByBreedId(breedId).subscribe({
-      next: (images) => {
-        this.images = images;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error loading images:', err);
-        this.loading = false;
-      }
-    });
-  }
-
-  prevImage() {
-    this.currentImageIndex = this.currentImageIndex > 0
-      ? this.currentImageIndex - 1
-      : this.images.length - 1;
-  }
-
-  nextImage() {
-    this.currentImageIndex = this.currentImageIndex < this.images.length - 1
-      ? this.currentImageIndex + 1
-      : 0;
+    this.imageService
+      .getImagesByBreedId(breedId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (images) => {
+          this.images.set(images);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 }

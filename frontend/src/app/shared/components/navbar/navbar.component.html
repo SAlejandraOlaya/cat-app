@@ -1,0 +1,25 @@
+<nav class="bg-white shadow-sm border-b border-gray-200">
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <span class="text-2xl">🐱</span>
+      <a routerLink="/home" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">CatApp</a>
+    </div>
+    <div class="flex items-center gap-4">
+      <a routerLink="/breeds" class="text-gray-600 hover:text-blue-600 transition text-sm font-medium">Breeds Table</a>
+
+      @if (isLoggedIn()) {
+        <a routerLink="/profile" class="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-blue-700 hover:to-purple-700 transition text-sm shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+          </svg>
+          Profile
+        </a>
+      } @else {
+        <a routerLink="/login" class="text-gray-600 hover:text-blue-600 transition text-sm font-medium">Login</a>
+        <a routerLink="/register" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full hover:from-blue-700 hover:to-purple-700 transition text-sm shadow-md">
+          Register
+        </a>
+      }
+    </div>
+  </div>
+</nav>
