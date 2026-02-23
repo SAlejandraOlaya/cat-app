@@ -12,7 +12,7 @@ describe('Cat Image Service', () => {
         (httpClient.get as jest.Mock).mockResolvedValue({ data: mockImages });
         const result = await getImagesByBreedId('1');
         expect(result).toEqual(mockImages);
-        expect(httpClient.get).toHaveBeenCalledWith('/images/search?breed_ids=1&limit=8');
+        expect(httpClient.get).toHaveBeenCalledWith('/images/search', { params: { breed_ids: '1', limit: 8 } });
         expect(httpClient.get).toHaveBeenCalledTimes(1);
     });
 });

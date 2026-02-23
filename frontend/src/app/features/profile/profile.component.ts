@@ -4,9 +4,11 @@ import {
   ChangeDetectionStrategy,
   signal,
   inject,
+  DestroyRef,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { Router, RouterModule } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AuthService } from "../../core/services/auth.service";
 import { IUser } from "../../shared/interfaces/user.interface";
 import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
@@ -22,15 +24,34 @@ import { NavbarComponent } from "../../shared/components/navbar/navbar.component
 export class ProfileComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
-  user: IUser | null = null;
+  user = signal<IUser | null>(null);
+  loading = signal(true);
+  error = signal<string | null>(null);
   userName = signal("");
   isLoggedIn = signal(false);
 
   ngOnInit() {
-    this.user = this.authService.getUser();
-    this.userName.set(this.user?.name || "");
     this.isLoggedIn.set(this.authService.isLoggedIn());
+
+    this.authService
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (user) => {
+          this.user.set(user);
+          this.userName.set(user.name);
+          this.loading.set(false);
+        },
+        error: () => {
+          const cached = this.authService.getUser();
+          this.user.set(cached);
+          this.userName.set(cached?.name || "");
+          this.error.set("Could not load profile from server. Showing cached data.");
+          this.loading.set(false);
+        },
+      });
   }
 
   onLogout() {

@@ -33,6 +33,12 @@ export class AuthService {
     });
   }
 
+  getProfile(): Observable<IUser> {
+    return this.http.get<IUser>(`${this.apiUrl}/profile`).pipe(
+      tap((user) => this.saveUser(user))
+    );
+  }
+
   getToken(): string | null {
     return localStorage.getItem("token");
   }

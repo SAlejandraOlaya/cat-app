@@ -17,3 +17,7 @@ export const breedIdQuerySchema = z.object({
     .min(1, "Breed ID is required")
     .regex(/^[a-z]{4}$/, "Breed ID must be a 4-letter lowercase code"),
 });
+
+export type BreedIdParam = z.infer<typeof breedIdParamSchema>;
+export type SearchQuery = z.infer<typeof searchQuerySchema>;
+export type BreedIdQuery = z.infer<typeof breedIdQuerySchema>;

@@ -1,8 +1,5 @@
-import {
-  IUser,
-  IUserResponse,
-  IAuthResponse,
-} from "../interfaces/user.interface";
+import { IUserResponse, IAuthResponse } from "../interfaces/user.interface";
+import { RegisterDto } from "../dtos/auth.dto";
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import { ConflictError } from "../errors/conflict.error";
@@ -10,14 +7,16 @@ import { UnauthorizedError } from "../errors/unauthorized.error";
 import { NotFoundError } from "../errors/not-found.error";
 import { generateToken } from "../config/jwt";
 
-export const registerUser = async (user: IUser): Promise<IAuthResponse> => {
-  const existingUser = await User.findOne({ email: user.email });
+export const registerUser = async (
+  data: RegisterDto
+): Promise<IAuthResponse> => {
+  const existingUser = await User.findOne({ email: data.email });
   if (existingUser) {
     throw new ConflictError("User already exists");
   }
 
-  const hashedPassword = await bcrypt.hash(user.password, 10);
-  const newUser = new User({ ...user, password: hashedPassword });
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+  const newUser = new User({ ...data, password: hashedPassword });
   await newUser.save();
 
   const { password, ...userWithoutPassword } = newUser.toObject();

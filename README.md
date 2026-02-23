@@ -44,7 +44,23 @@ cat-app/
 - **Home**: Lista desplegable de razas, carrusel de imágenes e información detallada de la raza seleccionada.
 - **Breeds Table**: Tabla con datos relevantes de todas las razas y filtro de búsqueda por texto.
 - **Login / Register**: Autenticación con JWT y almacenamiento en MongoDB.
-- **Profile**: Vista protegida por guard que muestra la información del usuario logueado.
+- **Profile**: Vista protegida por guard que obtiene la información del usuario desde el backend (`GET /api/profile`) con fallback a caché local.
+
+## API Endpoints
+
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| `GET` | `/api/breeds` | No | Lista todas las razas de gatos |
+| `GET` | `/api/breeds/search?q=` | No | Busca razas por nombre |
+| `GET` | `/api/breeds/:breed_id` | No | Obtiene una raza por ID |
+| `GET` | `/api/imagesbybreedid?breed_id=` | No | Imágenes asociadas a una raza |
+| `POST` | `/api/register` | No | Registro de usuario |
+| `POST` | `/api/login` | No | Autenticación de usuario |
+| `GET` | `/api/profile` | JWT | Perfil del usuario autenticado |
+
+### Por qué login y register usan POST
+
+La prueba pide `GET /login` y `GET /register`, pero usé `POST` porque con `GET` las credenciales van en la URL y quedan en logs, historial del navegador y cachés de proxies. Además login y register producen efectos secundarios (crean token / crean usuario), así que semánticamente corresponden a `POST`. El body se envía como JSON y se valida con Zod.
 
 ## Requisitos previos
 
@@ -132,7 +148,7 @@ La app estará disponible en [http://localhost:4200](http://localhost:4200) y el
 ## Tests
 
 ```bash
-# Backend (Jest) — 26 tests
+# Backend (Jest) — 30 tests
 cd backend && npm test
 
 # Frontend (Karma/Jasmine) — 37 tests
