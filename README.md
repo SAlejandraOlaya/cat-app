@@ -4,12 +4,12 @@ Aplicación fullstack para explorar razas de gatos, visualizar imágenes y consu
 
 ## Stack
 
-| Capa | Tecnología |
-|------|-----------|
-| **Frontend** | Angular 18, TypeScript, Tailwind CSS |
-| **Backend** | Node.js, Express 5, TypeScript |
-| **Base de datos** | MongoDB 7 (Mongoose) |
-| **Contenedores** | Docker, Docker Compose, Nginx |
+| Capa              | Tecnología                           |
+| ----------------- | ------------------------------------ |
+| **Frontend**      | Angular 18, TypeScript, Tailwind CSS |
+| **Backend**       | Node.js, Express 5, TypeScript       |
+| **Base de datos** | MongoDB 7 (Mongoose)                 |
+| **Contenedores**  | Docker, Docker Compose, Nginx        |
 
 ## Arquitectura
 
@@ -48,15 +48,15 @@ cat-app/
 
 ## API Endpoints
 
-| Método | Ruta | Auth | Descripción |
-|--------|------|------|-------------|
-| `GET` | `/api/breeds` | No | Lista todas las razas de gatos |
-| `GET` | `/api/breeds/search?q=` | No | Busca razas por nombre |
-| `GET` | `/api/breeds/:breed_id` | No | Obtiene una raza por ID |
-| `GET` | `/api/imagesbybreedid?breed_id=` | No | Imágenes asociadas a una raza |
-| `POST` | `/api/register` | No | Registro de usuario |
-| `POST` | `/api/login` | No | Autenticación de usuario |
-| `GET` | `/api/profile` | JWT | Perfil del usuario autenticado |
+| Método | Ruta                             | Auth | Descripción                    |
+| ------ | -------------------------------- | ---- | ------------------------------ |
+| `GET`  | `/api/breeds`                    | No   | Lista todas las razas de gatos |
+| `GET`  | `/api/breeds/search?q=`          | No   | Busca razas por nombre         |
+| `GET`  | `/api/breeds/:breed_id`          | No   | Obtiene una raza por ID        |
+| `GET`  | `/api/imagesbybreedid?breed_id=` | No   | Imágenes asociadas a una raza  |
+| `POST` | `/api/register`                  | No   | Registro de usuario            |
+| `POST` | `/api/login`                     | No   | Autenticación de usuario       |
+| `GET`  | `/api/profile`                   | JWT  | Perfil del usuario autenticado |
 
 ### Por qué login y register usan POST
 
@@ -88,7 +88,7 @@ Editar `backend/.env` con los valores reales:
 ```env
 PORT=3000
 MONGODB_URI=mongodb://mongo:27017/catapp
-CAT_API_KEY=live_JBT0Ah0Nt12iyl2IpjQVLDWjcLk0GQwf4zI9wBMfmfejKmcC31mOJp4yJz5TsOUP
+CAT_API_KEY=<KEY>
 JWT_SECRET=una_clave_secreta_segura
 ```
 
@@ -102,11 +102,11 @@ docker compose up --build
 
 Esto construye y levanta los 3 servicios:
 
-| Servicio | Puerto | Descripción |
-|----------|--------|-------------|
+| Servicio     | Puerto                                         | Descripción                   |
+| ------------ | ---------------------------------------------- | ----------------------------- |
 | **frontend** | [http://localhost:4200](http://localhost:4200) | Angular app servida por Nginx |
-| **backend** | [http://localhost:3000](http://localhost:3000) | API REST con Express |
-| **mongo** | `27017` | Base de datos MongoDB |
+| **backend**  | [http://localhost:3000](http://localhost:3000) | API REST con Express          |
+| **mongo**    | `27017`                                        | Base de datos MongoDB         |
 
 ### 4. Abrir la aplicación
 
