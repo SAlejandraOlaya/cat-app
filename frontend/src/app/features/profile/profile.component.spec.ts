@@ -13,12 +13,14 @@ describe("ProfileComponent", () => {
   beforeEach(async () => {
     mockAuthService = jasmine.createSpyObj("AuthService", [
       "getUser",
+      "isLoggedIn",
       "logout",
     ]);
     mockAuthService.getUser.and.returnValue({
       name: "Ale",
       email: "ale@test.com",
     } as any);
+    mockAuthService.isLoggedIn.and.returnValue(true);
 
     await TestBed.configureTestingModule({
       imports: [ProfileComponent],

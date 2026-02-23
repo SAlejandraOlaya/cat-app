@@ -1,58 +1,61 @@
-<div class="min-h-screen bg-gray-100 p-6">
-  <div class="max-w-6xl mx-auto">
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
 
-    <div class="flex items-center justify-between mb-6">
-      <h1 class="text-3xl font-bold text-gray-800">Breeds Table</h1>
-      <a routerLink="/home" class="text-blue-600 hover:underline text-sm">Back to Home</a>
-    </div>
+  <app-navbar [isLoggedIn]="isLoggedIn()" [userName]="userName()" />
 
-    <div class="flex gap-3 mb-6">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-6">Breeds Table</h1>
+
+    <div class="flex flex-col sm:flex-row gap-3 mb-6">
       <input
         type="text"
         [(ngModel)]="searchQuery"
         placeholder="Search breeds..."
-        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="flex-1 px-4 py-2 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 transition"
       />
       <button
         (click)="onSearch()"
-        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+        class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 transition font-medium shadow-sm"
       >
         Search
       </button>
     </div>
 
     @if (loading()) {
-      <div class="text-center py-10 text-gray-500">Loading...</div>
+      <div class="text-center py-16">
+        <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <p class="text-gray-500 mt-4">Loading...</p>
+      </div>
     }
 
     @if (!loading() && breeds().length === 0) {
-      <div class="text-center py-10 text-gray-500">No breeds found.</div>
+      <div class="text-center py-16 text-gray-500">No breeds found.</div>
     }
 
     @if (!loading() && breeds().length > 0) {
-      <div class="overflow-x-auto bg-white rounded-lg shadow-md">
+      <div class="overflow-x-auto bg-white rounded-2xl shadow-lg">
         <table class="w-full text-sm text-left">
           <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
             <tr>
               <th class="px-4 py-3">Name</th>
               <th class="px-4 py-3">Origin</th>
-              <th class="px-4 py-3">Temperament</th>
+              <th class="px-4 py-3 hidden md:table-cell">Temperament</th>
               <th class="px-4 py-3">Life Span</th>
-              <th class="px-4 py-3">Weight</th>
-              <th class="px-4 py-3">Intelligence</th>
-              <th class="px-4 py-3">Adaptability</th>
+              <th class="px-4 py-3 hidden sm:table-cell">Weight</th>
+              <th class="px-4 py-3 hidden sm:table-cell">Intelligence</th>
+              <th class="px-4 py-3 hidden lg:table-cell">Adaptability</th>
             </tr>
           </thead>
           <tbody>
             @for (breed of breeds(); track breed.id) {
-              <tr class="border-t border-gray-200 hover:bg-gray-50">
+              <tr class="border-t border-gray-200 hover:bg-blue-50 transition">
                 <td class="px-4 py-3 font-medium text-gray-800">{{ breed.name }}</td>
                 <td class="px-4 py-3 text-gray-600">{{ breed.origin }}</td>
-                <td class="px-4 py-3 text-gray-600">{{ breed.temperament }}</td>
+                <td class="px-4 py-3 text-gray-600 hidden md:table-cell max-w-xs truncate">{{ breed.temperament }}</td>
                 <td class="px-4 py-3 text-gray-600">{{ breed.life_span }} yrs</td>
-                <td class="px-4 py-3 text-gray-600">{{ breed.weight.metric }} kg</td>
-                <td class="px-4 py-3 text-gray-600">{{ breed.intelligence }} / 5</td>
-                <td class="px-4 py-3 text-gray-600">{{ breed.adaptability }} / 5</td>
+                <td class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ breed.weight.metric }} kg</td>
+                <td class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ breed.intelligence }} / 5</td>
+                <td class="px-4 py-3 text-gray-600 hidden lg:table-cell">{{ breed.adaptability }} / 5</td>
               </tr>
             }
           </tbody>

@@ -1,9 +1,13 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Register</h2>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 sm:px-6">
+  <div class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <div class="text-center mb-6">
+      <span class="text-4xl block mb-2">🐱</span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800">Create Account</h2>
+      <p class="text-gray-500 text-sm mt-1">Join CatApp today</p>
+    </div>
 
     @if (errorMessage()) {
-      <div class="bg-red-100 text-red-700 p-3 rounded mb-4 text-sm">
+      <div class="bg-red-100 text-red-700 p-3 rounded-xl mb-4 text-sm">
         {{ errorMessage() }}
       </div>
     }
@@ -15,7 +19,7 @@
           type="text"
           formControlName="name"
           placeholder="Enter your name"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 transition"
         />
         @if (form.controls.name.touched && form.controls.name.errors) {
           <span class="text-red-500 text-xs mt-1 block">Name must be at least 2 characters</span>
@@ -28,7 +32,7 @@
           type="email"
           formControlName="email"
           placeholder="Enter your email"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 transition"
         />
         @if (form.controls.email.touched && form.controls.email.errors) {
           <span class="text-red-500 text-xs mt-1 block">Please enter a valid email</span>
@@ -41,7 +45,7 @@
           type="password"
           formControlName="password"
           placeholder="Enter your password"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="w-full px-4 py-2.5 border-2 border-gray-200 rounded-xl bg-white focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 text-gray-700 transition"
         />
         @if (form.controls.password.touched && form.controls.password.errors) {
           <span class="text-red-500 text-xs mt-1 block">Password must be at least 6 characters</span>
@@ -51,15 +55,15 @@
       <button
         type="submit"
         [disabled]="form.invalid"
-        class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+        class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 rounded-xl hover:from-blue-700 hover:to-purple-700 transition font-medium shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Register
       </button>
     </form>
 
-    <p class="text-center text-sm text-gray-600 mt-4">
+    <p class="text-center text-sm text-gray-600 mt-6">
       Already have an account?
-      <a routerLink="/login" class="text-blue-600 hover:underline">Login</a>
+      <a routerLink="/login" class="text-blue-600 hover:underline font-medium">Login</a>
     </p>
   </div>
 </div>

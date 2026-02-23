@@ -22,6 +22,7 @@ export const routes: Routes = [
       import("./features/home/home.component").then(
         (m) => m.HomeComponent
       ),
+    canActivate: [authGuard],
   },
   {
     path: "breeds",
@@ -29,6 +30,7 @@ export const routes: Routes = [
       import("./features/breeds/breeds.component").then(
         (m) => m.BreedsComponent
       ),
+    canActivate: [authGuard],
   },
   {
     path: "profile",

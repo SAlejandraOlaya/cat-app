@@ -11,25 +11,33 @@ import { FormsModule } from "@angular/forms";
 import { RouterModule } from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CatService } from "../../shared/services/cat.service";
+import { AuthService } from "../../core/services/auth.service";
 import { IBreed } from "../../shared/interfaces/cat.interface";
+import { NavbarComponent } from "../../shared/components/navbar/navbar.component";
 
 @Component({
   selector: "app-breeds",
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent],
   templateUrl: "./breeds.component.html",
   styleUrl: "./breeds.component.css",
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreedsComponent implements OnInit {
   private catService = inject(CatService);
+  private authService = inject(AuthService);
   private destroyRef = inject(DestroyRef);
 
   breeds = signal<IBreed[]>([]);
   searchQuery = "";
   loading = signal(false);
+  userName = signal("");
+  isLoggedIn = signal(false);
 
   ngOnInit() {
+    const user = this.authService.getUser();
+    this.userName.set(user?.name || "");
+    this.isLoggedIn.set(this.authService.isLoggedIn());
     this.loadAllBreeds();
   }
 
